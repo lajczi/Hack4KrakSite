@@ -163,7 +163,6 @@ impl AuthService {
         {
             return Ok(());
         }
-
         let confirmation_code = email_verification_request::Model::create(
             &app_state.database,
             EmailVerificationAction::ResetPassword,

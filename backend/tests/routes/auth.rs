@@ -232,8 +232,16 @@ async fn reset_password_flow() {
     let response = test::call_service(&app, request).await;
     assert_eq!(response.status(), 200);
 
-    let email_body = &smtp_client.get_emails().await.items[0].content.body;
-    let reset_code = regex.find(email_body).unwrap().as_str();
+    // email is sent in a background task to prevent timing-based enumeration,
+    // so poll until it arrives
+    let email_body = loop {
+        let emails = smtp_client.get_emails().await;
+        if let Some(item) = emails.items.into_iter().next() {
+            break item.content.body;
+        }
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+    };
+    let reset_code = regex.find(&email_body).unwrap().as_str();
 
     let request = test::TestRequest::patch()
         .uri("/auth/reset_password")
