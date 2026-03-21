@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import { shikiLangNames, shikiTheme } from './app/utils/shiki'
+import { getNodeTransforms } from './app/utils/vite-node-transforms'
 
 dotenv.config({ path: '../.env' })
 
@@ -44,6 +45,17 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2025-07-16',
+
+  vite: {
+    vue: {
+      template: {
+        compilerOptions: {
+          nodeTransforms: getNodeTransforms(),
+        },
+      },
+    },
+  },
+
   imports: {
     presets: [
       {
@@ -70,10 +82,11 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/panel/**': { appLayout: 'panel' },
     '/tasks/description/**': { swr: true },
     // For now, we have to manually list all docs to prerender them
     // due to some issues with Nitro crawling dynamic routes
-    '/docs/**': { prerender: true },
+    '/docs/**': { appLayout: 'static-page', prerender: true },
     '/docs/faq': { prerender: true },
     '/docs/rules': { prerender: true },
     '/docs/privacy-policy': { prerender: true },
@@ -175,9 +188,16 @@ export default defineNuxtConfig({
     description: 'Hack4Krak to największy w Polsce CTF dla uczniów szkół średnich! Sprawdź swoje umiejętności w cyberbezpieczeństwie, zgłoś swoją drużynę i rywalizuj o nagrody!',
     defaultLocale: 'pl',
   },
+  // https://nuxt-auto-form.norbiros.dev/customization/config
+  autoForm: {
+    modal: {
+      submitLabel: 'Potwierdź',
+      closeLabel: 'Anuluj',
+    },
+  },
   // https://content.nuxt.com/docs/getting-started
   content: {
-    experimental: { nativeSqlite: true },
+    experimental: { sqliteConnector: 'native' },
     build: {
       markdown: {
         highlight: {
