@@ -28,6 +28,8 @@ pub struct Model {
     pub marketing_consent_accepted_at: DateTime,
     pub marketing_consent_updated_at: DateTime,
     pub referral_source: Option<Json>,
+    pub ctf_experience: Option<String>,
+    pub ctf_interest_areas: Option<Json>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

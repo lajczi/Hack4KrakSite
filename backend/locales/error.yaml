@@ -41,6 +41,8 @@ Error:
 AccountError:
   BirthYearNotInRange: "Rok urodzenia musi być pomiędzy {min} a {max}"
   InvalidReferralSource: "Nieprawidłowe źródło polecenia"
+  InvalidCtfExperience: "Nieprawidłowy poziom doświadczenia CTF"
+  InvalidCtfInterestArea: "Nieprawidłowy obszar zainteresowań CTF"
 
 AuthError:
   UserAlreadyExists: "Użytkownik już istnieje"

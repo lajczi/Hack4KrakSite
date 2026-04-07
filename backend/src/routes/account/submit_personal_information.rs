@@ -1,6 +1,6 @@
 use crate::entities::{user_personal_info, users};
-use crate::models::user_personal_info::{ALLOWED_REFERRAL_SOURCES, MAX_AGE};
-use crate::routes::account::AccountError::{BirthYearNotInRange, InvalidReferralSource};
+use crate::models::user_personal_info::{ALLOWED_CTF_EXPERIENCE, ALLOWED_CTF_INTEREST_AREAS, ALLOWED_REFERRAL_SOURCES, MAX_AGE};
+use crate::routes::account::AccountError::{BirthYearNotInRange, InvalidCtfExperience, InvalidCtfInterestArea, InvalidReferralSource};
 use crate::utils::app_state;
 use crate::utils::error::Error;
 use crate::utils::success_response::SuccessResponse;
@@ -16,9 +16,12 @@ pub struct UserPersonalInformationSubmissionRequest {
     pub birth_year: i32,
     pub location: String,
     pub organization: String,
+    #[serde(default)]
     pub is_vegetarian: bool,
     pub marketing_consent: bool,
     pub referral_source: Option<Vec<String>>,
+    pub ctf_experience: Option<String>,
+    pub ctf_interest_areas: Option<Vec<String>>,
 }
 
 #[utoipa::path(
@@ -56,6 +59,20 @@ pub async fn submit_personal_information(
         })
     {
         return Err(Error::Account(InvalidReferralSource));
+    }
+
+    if let Some(ctf_experience) = &request_body.ctf_experience
+        && !ALLOWED_CTF_EXPERIENCE.contains(&ctf_experience.as_str())
+    {
+        return Err(Error::Account(InvalidCtfExperience));
+    }
+
+    if let Some(ctf_interest_areas) = &request_body.ctf_interest_areas
+        && ctf_interest_areas.iter().any(|area| {
+            !ALLOWED_CTF_INTEREST_AREAS.contains(&area.as_str())
+        })
+    {
+        return Err(Error::Account(InvalidCtfInterestArea));
     }
 
     user_personal_info::Model::create(&app_state.database, user, request_body).await?;

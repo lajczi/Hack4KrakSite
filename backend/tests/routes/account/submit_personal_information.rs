@@ -102,7 +102,9 @@ async fn submit_personal_info() {
           "location": "Włochy",
           "marketing_consent": true,
           "organization": "Hack4Krak",
-          "referral_source": ["Linkedin"]
+          "referral_source": ["Linkedin"],
+          "ctf_experience": "beginner",
+          "ctf_interest_areas": ["Web", "Crypto"]
         }))
         .to_request();
 

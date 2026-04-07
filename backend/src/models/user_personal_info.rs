@@ -15,6 +15,23 @@ pub const ALLOWED_REFERRAL_SOURCES: [&str; 6] = [
     "Inne",
 ];
 
+pub const ALLOWED_CTF_EXPERIENCE: [&str; 4] = [
+    "none",
+    "beginner",
+    "intermediate",
+    "advanced",
+];
+
+pub const ALLOWED_CTF_INTEREST_AREAS: [&str; 7] = [
+    "Web",
+    "Crypto",
+    "Pwn",
+    "Rev",
+    "Forensics",
+    "OSINT",
+    "Misc",
+];
+
 pub const MAX_AGE: i32 = 120;
 
 impl Model {
@@ -38,6 +55,8 @@ impl Model {
             marketing_consent_accepted_at: Set(chrono::Utc::now().naive_utc()),
             marketing_consent_updated_at: Set(chrono::Utc::now().naive_utc()),
             referral_source: Set(request_body.referral_source.map(to_value).transpose()?),
+            ctf_experience: Set(request_body.ctf_experience),
+            ctf_interest_areas: Set(request_body.ctf_interest_areas.map(to_value).transpose()?),
         })
         .on_conflict(
             OnConflict::columns(vec![Column::Id])
@@ -51,6 +70,8 @@ impl Model {
                     Column::MarketingConsentAcceptedAt,
                     Column::MarketingConsentUpdatedAt,
                     Column::ReferralSource,
+                    Column::CtfExperience,
+                    Column::CtfInterestAreas,
                 ])
                 .to_owned(),
         )

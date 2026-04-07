@@ -48,7 +48,7 @@ async function logout() {
         </h1>
         <div class="flex flex-col gap-3 mt-3 justify-center">
           <UButton icon="mdi:account" variant="ghost" color="neutral" @click="navigateTo('/account/submit_personal_info')">
-            Zmień lub zobacz informacje o koncie
+            Edytuj informacje o koncie
           </UButton>
           <UButton icon="mdi:account-cog" variant="ghost" color="neutral" @click="updateAccountModal = true">
             Zmień ustawienia konta
