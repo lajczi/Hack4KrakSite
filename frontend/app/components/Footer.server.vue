@@ -30,9 +30,10 @@ const runtimeConfig = useRuntimeConfig().public
               :to="`https://github.com/Hack4Krak/Hack4KrakSite/commit/${runtimeConfig.gitCommit}`"
               target="_blank"
               class="text-xs text-dimmed hover:text-default transition-colors duration-150"
-            >{{ runtimeConfig.gitBranch }}@{{ runtimeConfig.gitCommit }}</ULink>
+            >
+              {{ runtimeConfig.gitBranch }}@{{ runtimeConfig.gitCommit }}
+            </ULink>
           </div>
-
         </div>
       </template>
 
