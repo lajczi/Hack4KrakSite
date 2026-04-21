@@ -71,14 +71,10 @@ async function logout() {
         Wydarzenia
         <JoinTeamButton class="whitespace-nowrap" @click="joinExternalTeamModal = true" />
       </div>
-      <div class="grow flex flex-col items-center justify-center gap-3 text-muted py-10">
-        <UIcon name="pixelarticons:calendar" class="size-12" />
-        <p class="text-lg font-medium">
-          Brak wydarzeń
-        </p>
-        <p class="text-sm text-center">
-          Nie jesteś jeszcze zapisany do żadnego wydarzenia.
-        </p>
+      <div class="grow">
+        <Placeholder class="w-full h-full">
+          Strona w trakcie tworzenia!<br>
+        </Placeholder>
       </div>
     </div>
   </div>
