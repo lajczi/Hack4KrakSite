@@ -21,8 +21,8 @@ services:
     build:
         context: .
         dockerfile: backend/Dockerfile
-        secrets:
-          - GIT_ACCESS_TOKEN
+        args:
+          GIT_ACCESS_TOKEN: ${GIT_ACCESS_TOKEN}
     restart: on-failure
     ports:
       - "8080:8080"
@@ -51,7 +51,3 @@ services:
 
 volumes:
   database:
-
-secrets:
-  GIT_ACCESS_TOKEN:
-    environment: GIT_ACCESS_TOKEN
