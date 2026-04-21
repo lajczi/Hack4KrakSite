@@ -25,9 +25,6 @@ const runtimeConfig = useRuntimeConfig().public
             <span>Kod źródłowy na <ULink to="https://github.com/Hack4Krak/Hack4KrakSite" class="font-medium" target="_blank">GitHub</ULink></span>
           </div>
 
-          <div v-if="runtimeConfig.gitCommit" class="hidden lg:block">
-            <span aria-hidden="true" class="text-xs text-dimmed">{{ runtimeConfig.gitBranch }}@{{ runtimeConfig.gitCommit }}</span>
-          </div>
         </div>
       </template>
 
