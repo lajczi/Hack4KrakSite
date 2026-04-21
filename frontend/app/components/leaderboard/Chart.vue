@@ -3,13 +3,6 @@ import type { EChartsOption } from 'echarts'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
-import * as echarts from 'echarts/core'
-import { SVGRenderer } from 'echarts/renderers'
-import useEventStartAndEnd from '~/composables/useEventStartAndEnd'
-
-echarts.use([SVGRenderer])
-
-const initOptions = { renderer: 'svg' } as const
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -77,7 +70,7 @@ const chartOption = computed<EChartsOption>(() => {
       type: 'time',
       min: start,
       max: end,
-      name: 'Date',
+      name: 'Data',
       nameLocation: 'middle',
       nameGap: 35,
       axisLabel: {
@@ -95,6 +88,21 @@ const chartOption = computed<EChartsOption>(() => {
       },
     },
 
+    dataZoom: [
+      {
+        type: 'inside',
+        xAxisIndex: 0,
+        filterMode: 'none',
+        minSpan: 25,
+      },
+      {
+        type: 'inside',
+        yAxisIndex: 0,
+        filterMode: 'none',
+        minSpan: 25,
+      },
+    ],
+
     series: chartData.value.team_points_over_time.map((item: TeamData) => ({
       name: item.name,
       type: 'line',
@@ -102,10 +110,7 @@ const chartOption = computed<EChartsOption>(() => {
       symbol: 'circle',
       symbolSize: 6,
       animation: false,
-      data: item.points.map((point: number, i: number) => [
-        adjustedTimestamps.value[i],
-        point,
-      ]),
+      data: item.points.map((point: number, i: number) => [adjustedTimestamps.value[i], point]),
       lineStyle: {
         color: item.color,
         width: 2,
@@ -125,12 +130,10 @@ const chartOption = computed<EChartsOption>(() => {
 
 <template>
   <div class="h-full w-full">
-    <VChart
-      v-if="chartData && start && end"
-      :option="chartOption"
-      autoresize
-      :init-options="initOptions"
-      class="h-full w-full"
-    />
+    <p class="text-center text-xs text-neutral-500 mb-1 flex items-center justify-center gap-1">
+      <UIcon name="pixelarticons:zap" />
+      Użyj scrolla, aby przybliżyć wykres
+    </p>
+    <VChart v-if="chartData && eventInformation" :option="chartOption" autoresize class="h-full w-full" />
   </div>
 </template>
