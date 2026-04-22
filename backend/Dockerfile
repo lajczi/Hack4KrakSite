@@ -33,9 +33,9 @@ ARG GIT_REPO=TasksTemplate
 ARG BRANCH=master
 # Pass --build-arg CACHEBUST=$(date +%s) to invalidate cache when tasks repo updates
 ARG CACHEBUST=0
-ARG GIT_ACCESS_TOKEN
 
-RUN git clone -b $BRANCH "https://${GIT_USER}:${GIT_ACCESS_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git" TasksRepo/
+RUN --mount=type=secret,id=GIT_ACCESS_TOKEN,env=GIT_ACCESS_TOKEN \
+  git clone -b $BRANCH "https://${GIT_USER}:${GIT_ACCESS_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git" TasksRepo/
 
 ENV TASKS_BASE_PATH=TasksRepo/
 
