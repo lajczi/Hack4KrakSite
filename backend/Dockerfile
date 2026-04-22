@@ -22,24 +22,21 @@ COPY --from=planner /app/openapi-cli/ openapi-cli/
 COPY backend .
 RUN cargo build --release --bin hack4krak-backend
 
-# Download TasksTemplate or other tasks repository in a separate stage so
-# GIT_ACCESS_TOKEN does not end up in the final runtime image's layer history.
-FROM debian:trixie-slim AS task-fetcher
+# We do not need the Rust toolchain to run the binary!
+FROM debian:trixie-slim AS runtime
+WORKDIR /app
+RUN apt-get update && apt-get install -y libssl3 ca-certificates git
+
+# Download TasksTemplate or other tasks repository
 ARG GIT_USER=Hack4Krak
 ARG GIT_REPO=TasksTemplate
 ARG BRANCH=master
 # Pass --build-arg CACHEBUST=$(date +%s) to invalidate cache when tasks repo updates
 ARG CACHEBUST=0
 ARG GIT_ACCESS_TOKEN
-RUN apt-get update && apt-get install -y ca-certificates git
-RUN git clone -b $BRANCH "https://${GIT_USER}:${GIT_ACCESS_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git" /TasksRepo/
 
-# We do not need the Rust toolchain to run the binary!
-FROM debian:trixie-slim AS runtime
-WORKDIR /app
-RUN apt-get update && apt-get install -y libssl3 ca-certificates
+RUN git clone -b $BRANCH "https://${GIT_USER}:${GIT_ACCESS_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git" TasksRepo/
 
-COPY --from=task-fetcher /TasksRepo/ TasksRepo/
 ENV TASKS_BASE_PATH=TasksRepo/
 
 COPY --from=builder /app/target/release/hack4krak-backend /usr/local/bin
